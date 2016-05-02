@@ -1,30 +1,7 @@
 ﻿namespace HelloRPS.Core
 
-module Models =
-  type Move =
-      | Rock
-      | Paper
-      | Scissors
-
-  type GameResult =
-      | PlayerOneWin
-      | PlayerTwoWin
-      | Tie
-
-  type GameState =
-      | NotStarted
-      | Created 
-      | Started
-      | Ended
-
-  type State =
-      { gameId: string
-        gameState: GameState
-        creatorName: string
-        creatorMove: Move }
-
 module Interop =
-  open Models
+  open HelloRPS.Core.Models
   open FSharp.Reflection
   open System.Runtime.InteropServices
   let TryParseStateFromString s ([<Out>] state : Move byref) =
@@ -33,7 +10,7 @@ module Interop =
     | [| c |] -> state <- FSharpValue.MakeUnion(c, Array.empty) :?> Move; true
     | _ -> false
 
-open Models
+open HelloRPS.Core.Models
 module Game =
   let EmptyState =
       { gameId = ""
@@ -48,4 +25,3 @@ module Game =
       | Move.Paper, Move.Scissors -> GameResult.PlayerTwoWin
       | x, y when x = y           -> GameResult.Tie
       | _                         -> GameResult.PlayerOneWin
-
